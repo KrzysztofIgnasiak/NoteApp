@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.content.Intent;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +55,18 @@ public class MainActivity extends AppCompatActivity {
 
         ListView ListView = (ListView) findViewById(R.id.ListView);
 
-        notes.add("Example note");
+        SharedPreferences sharedPreferences = getApplicationContext()
+                .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+        HashSet<String> set = (HashSet<String>)sharedPreferences.getStringSet("notes",null);
+
+        if(set == null) {
+
+            notes.add("Example note");
+        }
+        else
+        {
+            notes = new ArrayList(set);
+        }
 
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
 
@@ -79,6 +93,12 @@ public class MainActivity extends AppCompatActivity {
                    public void onClick(DialogInterface dialog, int which) {
                        notes.remove(position);
                        arrayAdapter.notifyDataSetChanged();
+
+                       SharedPreferences sharedPreferences = getApplicationContext()
+                               .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                       HashSet<String> set = new HashSet(MainActivity.notes);
+
+                       sharedPreferences.edit().putStringSet("notes",set).apply();
                    }
                }).setNegativeButton("No",null)
                        .show();

@@ -2,11 +2,15 @@ package com.example.notes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.content.Intent;
+
+import java.util.HashSet;
 
 import static android.media.CamcorderProfile.get;
 import static android.widget.EditText.*;
@@ -46,6 +50,12 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                 MainActivity.notes.set(noteId,String.valueOf(s));
                 MainActivity.arrayAdapter.notifyDataSetChanged();
+
+                SharedPreferences sharedPreferences = getApplicationContext()
+                        .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                HashSet<String> set = new HashSet(MainActivity.notes);
+
+                sharedPreferences.edit().putStringSet("notes",set).apply();
             }
 
             @Override
