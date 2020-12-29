@@ -3,6 +3,8 @@ package com.example.notes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.content.Intent;
 
@@ -25,5 +27,24 @@ public class NoteEditorActivity extends AppCompatActivity {
         {
             editText.setText(MainActivity.notes.get(noteId));
         }
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                MainActivity.notes.set(noteId,String.valueOf(s));
+                MainActivity.arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }
