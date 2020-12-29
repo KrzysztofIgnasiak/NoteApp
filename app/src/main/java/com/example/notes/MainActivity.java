@@ -3,6 +3,8 @@ package com.example.notes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,6 +65,26 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),NoteEditorActivity.class);
                 intent.putExtra("noteId",position);
                 startActivity(intent);
+            }
+        });
+
+        ListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+               new AlertDialog.Builder(MainActivity.this)
+                       .setIcon(android.R.drawable.ic_dialog_alert)
+                       .setTitle("are you sure")
+                       .setMessage("Do you want to delete this note").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       notes.remove(position);
+                       arrayAdapter.notifyDataSetChanged();
+                   }
+               }).setNegativeButton("No",null)
+                       .show();
+
+
+                return true;
             }
         });
 
