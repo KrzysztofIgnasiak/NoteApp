@@ -24,6 +24,7 @@ public class LogOnActivity extends AppCompatActivity {
     EditText etUsername, etPassword;
     Button btSubmit;
     Button btFinger;
+    Button btCreate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,16 @@ public class LogOnActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.et_username);
         etPassword = findViewById(R.id.et_password);
         btSubmit = findViewById(R.id.bt_submit);
+        btCreate = findViewById(R.id.bt_create);
+
+        btCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),CreateLogActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
