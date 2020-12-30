@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.notes">
-    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Notes">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".CreateLogActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".NoteEditorActivity" />
         <activity android:name=".LogOnActivity">
             <intent-filter>
