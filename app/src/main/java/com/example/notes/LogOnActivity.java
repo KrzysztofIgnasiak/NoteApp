@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Optional;
 import java.util.concurrent.Executor;
 
 public class LogOnActivity extends AppCompatActivity {
@@ -35,8 +36,15 @@ public class LogOnActivity extends AppCompatActivity {
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Optional<String> saltOptional = Security.generateSalt(512);
+                String salt = saltOptional.orElse("");
+                String oryginalPassword = "admin";
+                String tryPassword = etPassword.getText().toString();
+                Optional<String> hashOryginalPassword = Security.hashPassword(oryginalPassword,salt);
+                Optional<String> tryHashPassword = Security.hashPassword(tryPassword,salt);
+
                 if(etUsername.getText().toString().equals("admin") &&
-                etPassword.getText().toString().equals("admin"))
+                hashOryginalPassword.equals(tryHashPassword))
                 {
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);

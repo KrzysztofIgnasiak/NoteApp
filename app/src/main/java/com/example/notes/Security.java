@@ -1,6 +1,7 @@
 package com.example.notes;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Base64;
@@ -16,6 +17,8 @@ public class Security {
     private static final int INTERATIONS = 65536; // how many times we should perform the hashing algorithm
     private static final int KEY_LENGHT = 512; // the desired length of the key in bites
     private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
+
+    private static final SecureRandom Rand = new SecureRandom();
 
     public static Optional<String> hashPassword(String password, String salt)
     {
@@ -42,10 +45,17 @@ public class Security {
         }
     }
 
-    public static boolean verifyPassword(String password,String key,String salt)
+
+    public static Optional<String> generateSalt(final int length)
     {
-        Optional<String> optEncrypted = hashPassword(password, salt);
-        if(!optEncrypted.isPresent()) return false;
-        return optEncrypted.get().equals(key);
+        if(length<1)
+        {
+            System.err.println("error in generateSalt : lenth must be >0");
+        }
+
+        byte[] salt = new byte[length];
+        Rand.nextBytes(salt);
+
+        return Optional.of(Base64.getEncoder().encodeToString(salt));
     }
 }
