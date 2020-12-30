@@ -86,6 +86,15 @@
             android:text="Use Fingerprint"
             android:id="@+id/login_btn"/>
     </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bt_create"
+        android:text="create new User and Password"
+        android:textColor="@color/white"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/round_button"/>
+
 
     </LinearLayout>
 
