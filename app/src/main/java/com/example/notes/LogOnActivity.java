@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 //import android.hardware.biometrics.BiometricManager;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
@@ -47,14 +49,26 @@ public class LogOnActivity extends AppCompatActivity {
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Optional<String> saltOptional = Security.generateSalt(512);
-                String salt = saltOptional.orElse("");
-                String oryginalPassword = "admin";
-                String tryPassword = etPassword.getText().toString();
-                Optional<String> hashOryginalPassword = Security.hashPassword(oryginalPassword,salt);
-                Optional<String> tryHashPassword = Security.hashPassword(tryPassword,salt);
+                SharedPreferences pref = getSharedPreferences("com.example.notes.utilities",
+                        Context.MODE_PRIVATE);
 
-                if(etUsername.getText().toString().equals("admin") &&
+                String hashOryginalPassword = pref.getString("Password",null);
+                String salt = pref.getString("salt",null);
+                String UserName = pref.getString("LogIn",null);
+
+               // Optional<String> saltOptional = Security.generateSalt(512);
+                //String salt = saltOptional.orElse("");
+               // String oryginalPassword = "admin";
+                String tryPassword = etPassword.getText().toString();
+               // Optional<String> hashOryginalPassword = Security.hashPassword(oryginalPassword,salt);
+                if(UserName.isEmpty() ||salt.isEmpty())
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "you have to create username and password",Toast.LENGTH_SHORT).show();
+                }
+                Optional<String> tryHashPasswordOptional = Security.hashPassword(tryPassword,salt);
+                String tryHashPassword = tryHashPasswordOptional.orElse("");
+                if(etUsername.getText().toString().equals(UserName) &&
                 hashOryginalPassword.equals(tryHashPassword))
                 {
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
