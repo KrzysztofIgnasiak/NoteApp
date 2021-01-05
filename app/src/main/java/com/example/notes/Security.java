@@ -27,7 +27,7 @@ public class Security {
 
         PBEKeySpec spec = new PBEKeySpec(chars,bytes, INTERATIONS,KEY_LENGHT); // how we'are going to generated hashed password
 
-        Arrays.fill(chars, Character.MIN_VALUE); // all infromation is in spec so it is good idea to delete the orginal password
+        Arrays.fill(chars, Character.MIN_VALUE); // all information is in spec so it is good idea to delete the oryginal password
 
         try
         {

@@ -23,20 +23,20 @@ public class NoteEditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_editor);
 
-        EditText editText = (EditText) findViewById(R.id.editText);
+        EditText editText = (EditText) findViewById(R.id.editText); //get connection with editText
 
         Intent intent = getIntent();
-        noteId = intent.getIntExtra("noteId",-1);
+        noteId = intent.getIntExtra("noteId",-1); //get id of note
 
-        if(noteId !=-1)
+        if(noteId !=-1) //if there is no note
         {
             editText.setText(MainActivity.notes.get(noteId));
         }
         else
         {
             MainActivity.notes.add("");
-            noteId = MainActivity.notes.size() -1;
-            MainActivity.arrayAdapter.notifyDataSetChanged();
+            noteId = MainActivity.notes.size() -1; //set id
+            MainActivity.arrayAdapter.notifyDataSetChanged(); //change text
         }
 
         editText.addTextChangedListener(new TextWatcher() {
@@ -54,7 +54,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getApplicationContext()
                         .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                 HashSet<String> set = new HashSet(MainActivity.notes);
-
+                //initialise shared preferences where notes with be saved as hashSet
                 sharedPreferences.edit().putStringSet("notes",set).apply();
 
             }

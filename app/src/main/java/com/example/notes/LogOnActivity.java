@@ -32,8 +32,8 @@ public class LogOnActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_on);
 
-        etUsername = findViewById(R.id.et_username);
-        etPassword = findViewById(R.id.et_password);
+        etUsername = findViewById(R.id.et_username); //getting connections with buttons
+        etPassword = findViewById(R.id.et_password);  //and editTexts
         btSubmit = findViewById(R.id.bt_submit);
         btCreate = findViewById(R.id.bt_create);
 
@@ -41,7 +41,7 @@ public class LogOnActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),CreateLogActivity.class);
-                startActivity(intent);
+                startActivity(intent); //go to CreateLogActtivity
             }
         });
 
@@ -50,29 +50,30 @@ public class LogOnActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences pref = getSharedPreferences("com.example.notes.utilities",
-                        Context.MODE_PRIVATE);
+                        Context.MODE_PRIVATE); //initialise shared preferences, where login, password
+                // and salt is stored
 
-                String hashOryginalPassword = pref.getString("Password",null);
-                String salt = pref.getString("salt",null);
-                String UserName = pref.getString("LogIn",null);
+                String hashOryginalPassword = pref.getString("Password",null); //get stored password
+                String salt = pref.getString("salt",null); // get stored string
+                String UserName = pref.getString("LogIn",null); // get stored username
 
                // Optional<String> saltOptional = Security.generateSalt(512);
                 //String salt = saltOptional.orElse("");
                // String oryginalPassword = "admin";
-                String tryPassword = etPassword.getText().toString();
+                String tryPassword = etPassword.getText().toString(); // get password from user
                // Optional<String> hashOryginalPassword = Security.hashPassword(oryginalPassword,salt);
                 if(UserName.isEmpty() ||salt.isEmpty())
                 {
                     Toast.makeText(getApplicationContext(),
                             "you have to create username and password",Toast.LENGTH_SHORT).show();
                 }
-                Optional<String> tryHashPasswordOptional = Security.hashPassword(tryPassword,salt);
+                Optional<String> tryHashPasswordOptional = Security.hashPassword(tryPassword,salt); //hash password received from user
                 String tryHashPassword = tryHashPasswordOptional.orElse("");
                 if(etUsername.getText().toString().equals(UserName) &&
-                hashOryginalPassword.equals(tryHashPassword))
+                hashOryginalPassword.equals(tryHashPassword)) // check whether username and password are correct
                 {
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
+                    startActivity(intent); // go to MainActivity
                    // AlertDialog.Builder builder = new AlertDialog.Builder(LogOnActivity.this);
 
                 }
@@ -90,7 +91,7 @@ public class LogOnActivity extends AppCompatActivity {
         BiometricManager biometricManager;
         biometricManager = BiometricManager.from(this);
 
-        switch(biometricManager.canAuthenticate())
+        switch(biometricManager.canAuthenticate()) //checking if it is possible to use sensors
         {
             case BiometricManager.BIOMETRIC_SUCCESS:
                // Intent intent = new Intent(getApplicationContext(),MainActivity.class);
@@ -112,7 +113,9 @@ public class LogOnActivity extends AppCompatActivity {
                  break;
         }
 
-        Executor executor = ContextCompat.getMainExecutor(this);
+        Executor executor = ContextCompat.getMainExecutor(this); // an object that executes submitted runnable tasks.
+
+        //initialise and use class that manages a system-provided biometric info
         BiometricPrompt biometricPrompt = new BiometricPrompt(LogOnActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
@@ -122,7 +125,7 @@ public class LogOnActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class); //if authentication success then go to Main actvitiy
                   startActivity(intent);
             }
 
