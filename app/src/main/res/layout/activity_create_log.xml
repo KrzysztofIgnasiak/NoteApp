@@ -33,7 +33,9 @@
             android:id="@+id/et_username_create"
             android:hint="Enter Username"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"/>
+            android:textColorHint="@color/black"
+            android:inputType="textPassword"
+            />
 
     </LinearLayout>
     <LinearLayout
