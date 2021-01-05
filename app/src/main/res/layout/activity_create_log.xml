@@ -34,7 +34,7 @@
             android:hint="Enter Username"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
-            android:inputType="textPassword"
+
             />
 
     </LinearLayout>
