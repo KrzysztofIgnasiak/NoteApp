@@ -47,7 +47,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_lock"/>
+            android:src="@drawable/ic_lock_dark"/>
         <EditText
             android:layout_width="200dp"
             android:layout_height="wrap_content"
@@ -84,7 +84,8 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="Use Fingerprint"
-            android:id="@+id/login_btn"/>
+            android:id="@+id/login_btn"
+            />
     </LinearLayout>
     <Button
         android:layout_width="wrap_content"
