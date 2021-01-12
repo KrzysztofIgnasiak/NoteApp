@@ -16,7 +16,6 @@ import static android.media.CamcorderProfile.get;
 import static android.widget.EditText.*;
 
 public class NoteEditorActivity extends AppCompatActivity {
-
     int noteId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
