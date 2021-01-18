@@ -4,7 +4,10 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -12,15 +15,20 @@ import java.security.NoSuchProviderException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import android.content.Context;
-import android.security.keystore.KeyGenParameterSpec;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+
 public class KeyStore_subSystem {
-
-
+    private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
+    private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private SecretKey GetOrCreateKey(String alias,Context context)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException, UnrecoverableEntryException, NoSuchProviderException, InvalidAlgorithmParameterException {
-        final String ANDROID_KEY_STORE = "AndroidKeyStore";
+        //final String ANDROID_KEY_STORE = "AndroidKeyStore";
         SecretKey key;
         KeyStore keyStore  = KeyStore.getInstance(ANDROID_KEY_STORE);
         keyStore.load(null);
@@ -39,4 +47,13 @@ public class KeyStore_subSystem {
         return key;
     }
 
+
+    private String Encrypt(String textToEncrypt, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+        final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.ENCRYPT_MODE,key);
+        byte[] iv = cipher.getIV();
+        byte[] encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
+        String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
+        return EncryptedText;
+    }
 }
