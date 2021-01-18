@@ -22,6 +22,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 
 public class KeyStore_subSystem {
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
@@ -52,8 +53,26 @@ public class KeyStore_subSystem {
         final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE,key);
         byte[] iv = cipher.getIV();
+
+        //TODO what is iv and how to store it
         byte[] encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
         String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
         return EncryptedText;
+    }
+
+    private String decrypt(String textToDecrypt,SecretKey key,byte[] encryptionIv) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+        final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        final GCMParameterSpec spec = new GCMParameterSpec(128, encryptionIv);
+        //TODO check this specification
+        cipher.init(Cipher.DECRYPT_MODE,key,spec);
+        byte[] Todecrpyt = textToDecrypt.getBytes();
+        byte[] decrypted = cipher.doFinal(Todecrpyt);
+
+        String decryptedText = new String(decrypted,"UTF-8");
+
+        return decryptedText;
+
+
+
     }
 }
