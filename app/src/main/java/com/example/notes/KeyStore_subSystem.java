@@ -27,6 +27,8 @@ import javax.crypto.spec.GCMParameterSpec;
 public class KeyStore_subSystem {
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
+    private static final String PASSSWORDALIAS = "PasswordKey";
+    private static final String DATAALIAS = "DataKey";
     private SecretKey GetOrCreateKey(String alias,Context context)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException, UnrecoverableEntryException, NoSuchProviderException, InvalidAlgorithmParameterException {
         //final String ANDROID_KEY_STORE = "AndroidKeyStore";
@@ -77,6 +79,88 @@ public class KeyStore_subSystem {
         return decryptedText;
 
 
+    }
+    private SecretKey GetOrCreatePasswordKey(Context context) throws CertificateException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, UnrecoverableEntryException, IOException {
+        SecretKey passwordKey = GetOrCreateKey(PASSSWORDALIAS,context);
+        return passwordKey;
+    }
+    private SecretKey GetOrCreateDataKey(Context context) throws CertificateException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, UnrecoverableEntryException, IOException {
+        SecretKey dataKey = GetOrCreateKey(DATAALIAS,context);
+        return dataKey;
+    }
+
+    public EncryptHandler EncryptPassword(Context context,String Text)
+    {
+        SecretKey key = null;
+        try {
+            key = GetOrCreatePasswordKey(context);
+        } catch (CertificateException | IOException | UnrecoverableEntryException | NoSuchProviderException |
+                KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+        EncryptHandler Handler = null;
+        try {
+            Handler = Encrypt(Text,key);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException |
+                UnsupportedEncodingException | BadPaddingException | IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+        return Handler;
+    }
+
+    public EncryptHandler EncryptData(Context context,String Text)
+    {
+        SecretKey key = null;
+        try {
+            key = GetOrCreateDataKey(context);
+        } catch (CertificateException | InvalidAlgorithmParameterException | NoSuchAlgorithmException |
+                KeyStoreException | NoSuchProviderException | UnrecoverableEntryException | IOException e) {
+            e.printStackTrace();
+        }
+        EncryptHandler Handler = null;
+        try {
+            Handler = Encrypt(Text,key);
+        } catch (NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
+                | UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return Handler;
+    }
+
+    public String DecryptPassword(String text, Context context, byte[] iv)
+    {
+        SecretKey key = null;
+        try {
+            key = GetOrCreatePasswordKey(context);
+        } catch (CertificateException | IOException | UnrecoverableEntryException | NoSuchProviderException |
+                KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+        String decryptedText = null;
+        try {
+            decryptedText = decrypt(text,key,iv);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
+                InvalidKeyException | BadPaddingException | IllegalBlockSizeException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return decryptedText;
+    }
+    public String DecryptData(String text,Context context, byte[] iv){
+        SecretKey key = null;
+        try {
+            key = GetOrCreateDataKey(context);
+        } catch (CertificateException | InvalidAlgorithmParameterException | NoSuchAlgorithmException |
+                KeyStoreException | NoSuchProviderException | UnrecoverableEntryException | IOException e) {
+            e.printStackTrace();
+        }
+        String decryptedText = null;
+        try {
+            decryptedText = decrypt(text,key,iv);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
+                InvalidKeyException | BadPaddingException | IllegalBlockSizeException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return decryptedText;
     }
 
 }
