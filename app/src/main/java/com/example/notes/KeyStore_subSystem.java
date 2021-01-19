@@ -52,9 +52,10 @@ public class KeyStore_subSystem {
     private String Encrypt(String textToEncrypt, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
         final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE,key);
-        byte[] iv = cipher.getIV();
+        byte[] iv = cipher.getIV(); // initialization vector
 
         //TODO what is iv and how to store it
+        //TODO iv for every note 
         byte[] encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
         String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
         return EncryptedText;
@@ -73,6 +74,6 @@ public class KeyStore_subSystem {
         return decryptedText;
 
 
-
     }
+
 }
