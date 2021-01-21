@@ -29,7 +29,7 @@ public class KeyStore_subSystem {
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final String PASSSWORDALIAS = "PasswordKey";
     private static final String DATAALIAS = "DataKey";
-    private SecretKey GetOrCreateKey(String alias,Context context)
+    private static SecretKey GetOrCreateKey(String alias,Context context)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException, UnrecoverableEntryException, NoSuchProviderException, InvalidAlgorithmParameterException {
         //final String ANDROID_KEY_STORE = "AndroidKeyStore";
         SecretKey key;
@@ -51,7 +51,7 @@ public class KeyStore_subSystem {
     }
 
 
-    private EncryptHandler Encrypt(String textToEncrypt, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+    private static EncryptHandler Encrypt(String textToEncrypt, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
         final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE,key);
         byte[] iv = cipher.getIV(); // initialization vector
@@ -66,7 +66,7 @@ public class KeyStore_subSystem {
         return Handler;
     }
 
-    private String decrypt(String textToDecrypt,SecretKey key,byte[] encryptionIv) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+    private static String decrypt(String textToDecrypt,SecretKey key,byte[] encryptionIv) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
         final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         final GCMParameterSpec spec = new GCMParameterSpec(128, encryptionIv);
         //TODO check this specification
@@ -80,16 +80,16 @@ public class KeyStore_subSystem {
 
 
     }
-    private SecretKey GetOrCreatePasswordKey(Context context) throws CertificateException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, UnrecoverableEntryException, IOException {
+    private static SecretKey GetOrCreatePasswordKey(Context context) throws CertificateException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, UnrecoverableEntryException, IOException {
         SecretKey passwordKey = GetOrCreateKey(PASSSWORDALIAS,context);
         return passwordKey;
     }
-    private SecretKey GetOrCreateDataKey(Context context) throws CertificateException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, UnrecoverableEntryException, IOException {
+    private static SecretKey GetOrCreateDataKey(Context context) throws CertificateException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, UnrecoverableEntryException, IOException {
         SecretKey dataKey = GetOrCreateKey(DATAALIAS,context);
         return dataKey;
     }
 
-    public EncryptHandler EncryptPassword(Context context,String Text)
+    public static EncryptHandler EncryptPassword(Context context,String Text)
     {
         SecretKey key = null;
         try {
@@ -108,7 +108,7 @@ public class KeyStore_subSystem {
         return Handler;
     }
 
-    public EncryptHandler EncryptData(Context context,String Text)
+    public static EncryptHandler EncryptData(Context context,String Text)
     {
         SecretKey key = null;
         try {
@@ -127,7 +127,7 @@ public class KeyStore_subSystem {
         return Handler;
     }
 
-    public String DecryptPassword(String text, Context context, byte[] iv)
+    public static String DecryptPassword(String text, Context context, byte[] iv)
     {
         SecretKey key = null;
         try {
@@ -145,7 +145,7 @@ public class KeyStore_subSystem {
         }
         return decryptedText;
     }
-    public String DecryptData(String text,Context context, byte[] iv){
+    public static String DecryptData(String text,Context context, byte[] iv){
         SecretKey key = null;
         try {
             key = GetOrCreateDataKey(context);
