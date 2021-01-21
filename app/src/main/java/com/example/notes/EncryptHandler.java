@@ -2,9 +2,9 @@ package com.example.notes;
 
 public class EncryptHandler {
     private byte[] iv;
-    private String encrypted;
+    private byte[] encrypted;
 
-    public EncryptHandler(byte[] iv_, String encrypted_){
+    public EncryptHandler(byte[] iv_, byte[] encrypted_){
         this.iv = iv_;
         this.encrypted = encrypted_;
     }
@@ -12,7 +12,7 @@ public class EncryptHandler {
     {
         return iv;
     }
-    public String getEncrypted()
+    public byte [] getEncrypted()
     {
         return encrypted;
     }

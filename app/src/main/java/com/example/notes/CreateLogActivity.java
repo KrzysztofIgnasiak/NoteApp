@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.Optional;
 
@@ -41,6 +42,23 @@ public class CreateLogActivity extends AppCompatActivity {
                 SharedPreferences pref = getSharedPreferences("com.example.notes.utilities",
                         Context.MODE_PRIVATE); // initialise shared preferences, where password
                 //username and salt will be stored
+
+                EncryptHandler Handler = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newUser);
+                byte [] result = Handler.getEncrypted();
+                byte [] iv = Handler.getIv();
+
+                byte [] decrypted = KeyStore_subSystem.DecryptPassword(result,getApplicationContext(),iv);
+                String decryptedString = decrypted.toString();
+
+                try{
+                    decryptedString.isEmpty();
+                    Toast.makeText(getApplicationContext(),
+                            decryptedString,Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
 
                 SharedPreferences.Editor editor = pref.edit();
 

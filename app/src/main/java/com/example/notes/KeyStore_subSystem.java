@@ -59,24 +59,24 @@ public class KeyStore_subSystem {
         //TODO what is iv and how to store it
         //TODO iv for every note 
         byte[] encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
-        String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
+        //String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
        // return EncryptedText;
-        EncryptHandler Handler = new EncryptHandler(iv,EncryptedText);
+        EncryptHandler Handler = new EncryptHandler(iv,encryption);
 
         return Handler;
     }
 
-    private static String decrypt(String textToDecrypt,SecretKey key,byte[] encryptionIv) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+    private static byte[] decrypt(byte[] textToDecrypt,SecretKey key,byte[] encryptionIv) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
         final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         final GCMParameterSpec spec = new GCMParameterSpec(128, encryptionIv);
         //TODO check this specification
         cipher.init(Cipher.DECRYPT_MODE,key,spec);
-        byte[] Todecrpyt = textToDecrypt.getBytes();
-        byte[] decrypted = cipher.doFinal(Todecrpyt);
+        //byte[] Todecrpyt = textToDecrypt.getBytes();
+        byte[] decrypted = cipher.doFinal(textToDecrypt);
 
-        String decryptedText = new String(decrypted,"UTF-8");
+        //String decryptedText = new String(decrypted,"UTF-8");
 
-        return decryptedText;
+        return decrypted;
 
 
     }
@@ -127,7 +127,7 @@ public class KeyStore_subSystem {
         return Handler;
     }
 
-    public static String DecryptPassword(String text, Context context, byte[] iv)
+    public static byte[] DecryptPassword(byte [] text, Context context, byte[] iv)
     {
         SecretKey key = null;
         try {
@@ -136,7 +136,7 @@ public class KeyStore_subSystem {
                 KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
-        String decryptedText = null;
+        byte [] decryptedText = null;
         try {
             decryptedText = decrypt(text,key,iv);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
@@ -145,7 +145,7 @@ public class KeyStore_subSystem {
         }
         return decryptedText;
     }
-    public static String DecryptData(String text,Context context, byte[] iv){
+    public static byte[] DecryptData(byte[] text,Context context, byte[] iv){
         SecretKey key = null;
         try {
             key = GetOrCreateDataKey(context);
@@ -153,7 +153,7 @@ public class KeyStore_subSystem {
                 KeyStoreException | NoSuchProviderException | UnrecoverableEntryException | IOException e) {
             e.printStackTrace();
         }
-        String decryptedText = null;
+        byte [] decryptedText = null;
         try {
             decryptedText = decrypt(text,key,iv);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
