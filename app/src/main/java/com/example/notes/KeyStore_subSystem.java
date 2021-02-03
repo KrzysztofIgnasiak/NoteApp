@@ -23,6 +23,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 
 public class KeyStore_subSystem {
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
@@ -62,6 +63,23 @@ public class KeyStore_subSystem {
         byte[] encryption = cipher.doFinal(textToEncrypt);
         //String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
        // return EncryptedText;
+        EncryptHandler Handler = new EncryptHandler(iv,encryption,key);
+
+        return Handler;
+    }
+
+    private static EncryptHandler Encrypt2(byte[] textToEncrypt, SecretKey key, byte[] iv) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
+        final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        final GCMParameterSpec spec = new GCMParameterSpec(128, iv);
+        cipher.init(Cipher.ENCRYPT_MODE,key,spec);
+       // byte[] iv = cipher.getIV(); // initialization vector
+
+        //TODO what is iv and how to store it
+        //TODO iv for every note
+        //byte[] encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
+        byte[] encryption = cipher.doFinal(textToEncrypt);
+        //String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
+        // return EncryptedText;
         EncryptHandler Handler = new EncryptHandler(iv,encryption,key);
 
         return Handler;
@@ -123,6 +141,23 @@ public class KeyStore_subSystem {
             Handler = Encrypt(Text,key);
         } catch (NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
                 | UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return Handler;
+    }
+    public static EncryptHandler EncryptData2(Context context,byte[] Text,byte[] iv )
+    {
+        SecretKey key = null;
+        try {
+            key = GetOrCreateDataKey(context);
+        } catch (CertificateException | InvalidAlgorithmParameterException | NoSuchAlgorithmException |
+                KeyStoreException | NoSuchProviderException | UnrecoverableEntryException | IOException e) {
+            e.printStackTrace();
+        }
+        EncryptHandler Handler = null;
+        try {
+            Handler = Encrypt2(Text,key,iv);
+        } catch (NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
         return Handler;

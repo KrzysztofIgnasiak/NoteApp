@@ -57,7 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getApplicationContext()
                 .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-        HashSet<String> set = (HashSet<String>)sharedPreferences.getStringSet("notes",null);
+        HashSet<String> set = (HashSet<String>)sharedPreferences.getStringSet("notes",null); //getting notes
+
+        //TODO create encryptedList
+        //TODO decrypt
 
         if(set == null) {
 
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        ListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() { // delete notes
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                new AlertDialog.Builder(MainActivity.this)

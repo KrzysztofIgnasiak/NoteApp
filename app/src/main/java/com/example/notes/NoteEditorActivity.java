@@ -47,8 +47,8 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                MainActivity.notes.set(noteId,String.valueOf(s));
-                MainActivity.arrayAdapter.notifyDataSetChanged();
+                MainActivity.notes.set(noteId,String.valueOf(s)); //adding note
+                MainActivity.arrayAdapter.notifyDataSetChanged(); // displaying changes
 
                 SharedPreferences sharedPreferences = getApplicationContext()
                         .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
