@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 public class CreateLogActivity extends AppCompatActivity {
@@ -43,28 +45,49 @@ public class CreateLogActivity extends AppCompatActivity {
                         Context.MODE_PRIVATE); // initialise shared preferences, where password
                 //username and salt will be stored
 
-                EncryptHandler Handler = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newUser);
-                byte [] result = Handler.getEncrypted();
-                byte [] iv = Handler.getIv();
+                //keystore encryption
+                //user
+                byte [] newUserBytes = new byte[0];
+                try {
+                    newUserBytes = newUser.getBytes("UTF-8"); // to bytes
+                } catch (UnsupportedEncodingException e) {
 
-                byte [] decrypted = KeyStore_subSystem.DecryptPassword(result,getApplicationContext(),iv);
-                String decryptedString = decrypted.toString();
-
-                try{
-                    decryptedString.isEmpty();
-                    Toast.makeText(getApplicationContext(),
-                            decryptedString,Toast.LENGTH_SHORT).show();
-                }
-                catch (Exception e)
-                {
                     e.printStackTrace();
                 }
 
+                EncryptHandler HandlerUser = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newUserBytes); //encrypt
+                byte [] newUserEncryptedBytes = HandlerUser.getEncrypted();
+                byte [] newUserIv = HandlerUser.getIv();
+
+                String newUserEncrypted = Base64.encodeToString(newUserEncryptedBytes, Base64.NO_WRAP); // to string
+                String newUserIvString =  Base64.encodeToString(newUserIv, Base64.NO_WRAP); //encode iv as string
+
+                //password
+                byte [] newPasswordBytes = new byte[0];
+                try {
+                    newPasswordBytes = hashNewPassword.getBytes("UTF-8");
+                }
+                catch(UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
+                EncryptHandler HandlerPassword = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newPasswordBytes); //encrypt
+                byte [] newPasswordEncryptedBytes = HandlerPassword.getEncrypted();
+                byte [] newPasswordIv = HandlerPassword.getIv();
+
+                String newPasswordEncrypted = Base64.encodeToString(newPasswordEncryptedBytes, Base64.NO_WRAP); // to string
+                String newPasswordIvString =  Base64.encodeToString(newPasswordIv, Base64.NO_WRAP); //encode iv as string
+
+
+
                 SharedPreferences.Editor editor = pref.edit();
 
-                editor.putString("LogIn",newUser); //save password, username and salt
+                editor.putString("LogIn",newUserEncrypted); //save password, username, salt and ives
                 editor.putString("salt",salt);
-                editor.putString("Password",hashNewPassword);
+                editor.putString("Password",newPasswordEncrypted);
+                editor.putString("UserIv",newUserIvString);
+                editor.putString("PasswordIv",newPasswordIvString);
+
 
                 editor.apply();
             }

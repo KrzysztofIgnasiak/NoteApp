@@ -12,12 +12,14 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import android.content.SharedPreferences;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
@@ -27,6 +29,8 @@ public class LogOnActivity extends AppCompatActivity {
     Button btSubmit;
     Button btFinger;
     Button btCreate;
+    private final int maxAttemps = 4;
+    private int attempt = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,39 +53,95 @@ public class LogOnActivity extends AppCompatActivity {
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences pref = getSharedPreferences("com.example.notes.utilities",
-                        Context.MODE_PRIVATE); //initialise shared preferences, where login, password
-                // and salt is stored
 
-                String hashOryginalPassword = pref.getString("Password",null); //get stored password
-                String salt = pref.getString("salt",null); // get stored string
-                String UserName = pref.getString("LogIn",null); // get stored username
-
-               // Optional<String> saltOptional = Security.generateSalt(512);
-                //String salt = saltOptional.orElse("");
-               // String oryginalPassword = "admin";
-                String tryPassword = etPassword.getText().toString(); // get password from user
-               // Optional<String> hashOryginalPassword = Security.hashPassword(oryginalPassword,salt);
-                if(UserName.isEmpty() ||salt.isEmpty())
+                if(attempt <maxAttemps)
                 {
-                    Toast.makeText(getApplicationContext(),
-                            "you have to create username and password",Toast.LENGTH_SHORT).show();
-                }
-                Optional<String> tryHashPasswordOptional = Security.hashPassword(tryPassword,salt); //hash password received from user
-                String tryHashPassword = tryHashPasswordOptional.orElse("");
-                if(etUsername.getText().toString().equals(UserName) &&
-                hashOryginalPassword.equals(tryHashPassword)) // check whether username and password are correct
-                {
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent); // go to MainActivity
-                   // AlertDialog.Builder builder = new AlertDialog.Builder(LogOnActivity.this);
+                    SharedPreferences pref = getSharedPreferences("com.example.notes.utilities",
+                            Context.MODE_PRIVATE); //initialise shared preferences, where login, password
+                    // and salt is stored
 
+                    String PasswordEncrypted = pref.getString("Password",null); //get stored password
+                    String salt = pref.getString("salt",null); // get stored string
+                    String UserNameEncrypted = pref.getString("LogIn",null); // get stored username
+                    String UserIv = pref.getString("UserIv",null);
+                    String PasswordIv = pref.getString("PasswordIv",null);
+
+
+                    // Optional<String> saltOptional = Security.generateSalt(512);
+                    //String salt = saltOptional.orElse("");
+                    // String oryginalPassword = "admin";
+                    String tryPassword = etPassword.getText().toString(); // get password from user
+                    // Optional<String> hashOryginalPassword = Security.hashPassword(oryginalPassword,salt);
+                    if(UserNameEncrypted.isEmpty() ||salt.isEmpty())
+                    {
+                        Toast.makeText(getApplicationContext(),
+                                "you have to create username and password",Toast.LENGTH_SHORT).show();
+                    }
+                    //decrypt with keystore
+                    //everything to bytes
+                    byte [] UserIvBytes = Base64.decode(UserIv,Base64.NO_WRAP);
+                    byte [] PasswordIvBytes = Base64.decode(PasswordIv,Base64.NO_WRAP);
+                    byte [] UserNameEncryptedBytes = Base64.decode(UserNameEncrypted,Base64.NO_WRAP);
+                    byte [] PasswordEncryptedBytes = Base64.decode(PasswordEncrypted,Base64.NO_WRAP);
+
+                    //decrypt
+                    byte [] UserBytes = KeyStore_subSystem.DecryptPassword(UserNameEncryptedBytes,getApplicationContext(),UserIvBytes);
+                    byte [] hashOryginalPasswordBytes = KeyStore_subSystem.DecryptPassword(PasswordEncryptedBytes,getApplicationContext(),PasswordIvBytes);
+
+                    //back to string
+                    String UserName = null;
+                    String hashOryginalPassword = null;
+                    try {
+                        UserName = new String(UserBytes, "UTF-8");
+                       // Toast.makeText(getApplicationContext(),
+                       //         UserName,Toast.LENGTH_SHORT).show();
+                    } catch ( UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        hashOryginalPassword = new String(hashOryginalPasswordBytes, "UTF-8");
+                    } catch ( UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(hashOryginalPassword == null)
+                    {
+                        Toast.makeText(getApplicationContext(),
+                                "there it is",Toast.LENGTH_SHORT).show();
+                    }
+
+                    // hashing try Password
+                    Optional<String> tryHashPasswordOptional = Security.hashPassword(tryPassword,salt);//hash password received from user
+
+                    String tryHashPassword = tryHashPasswordOptional.orElse("");
+                    //Toast.makeText(getApplicationContext(),
+                      //      tryHashPassword,Toast.LENGTH_SHORT).show();
+                    //compare
+                    if(etUsername.getText().toString().equals(UserName) &&
+                            hashOryginalPassword.equals(tryHashPassword)) // check whether username and password are correct
+                        //was tryHashPassword
+                    {
+                        etUsername.setText("");
+                        etPassword.setText("");
+                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent); // go to MainActivity
+                        // AlertDialog.Builder builder = new AlertDialog.Builder(LogOnActivity.this);
+
+                    }
+                    else
+                    {
+                        etUsername.setText("");
+                        etPassword.setText("");
+                        Toast.makeText(getApplicationContext(),
+                                "invalid Username or Password",Toast.LENGTH_SHORT).show();
+                        attempt++;
+                    }
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),
-                            "invalid Username or Password",Toast.LENGTH_SHORT).show();
+                    System.exit(0);
                 }
+               //attempt ++;
             }
 
         });

@@ -51,17 +51,18 @@ public class KeyStore_subSystem {
     }
 
 
-    private static EncryptHandler Encrypt(String textToEncrypt, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+    private static EncryptHandler Encrypt(byte[] textToEncrypt, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
         final Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE,key);
         byte[] iv = cipher.getIV(); // initialization vector
 
         //TODO what is iv and how to store it
         //TODO iv for every note 
-        byte[] encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
+        //byte[] encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
+        byte[] encryption = cipher.doFinal(textToEncrypt);
         //String EncryptedText = new String(encryption, StandardCharsets.UTF_8);
        // return EncryptedText;
-        EncryptHandler Handler = new EncryptHandler(iv,encryption);
+        EncryptHandler Handler = new EncryptHandler(iv,encryption,key);
 
         return Handler;
     }
@@ -89,7 +90,7 @@ public class KeyStore_subSystem {
         return dataKey;
     }
 
-    public static EncryptHandler EncryptPassword(Context context,String Text)
+    public static EncryptHandler EncryptPassword(Context context,byte[] Text)
     {
         SecretKey key = null;
         try {
@@ -108,7 +109,7 @@ public class KeyStore_subSystem {
         return Handler;
     }
 
-    public static EncryptHandler EncryptData(Context context,String Text)
+    public static EncryptHandler EncryptData(Context context,byte[] Text)
     {
         SecretKey key = null;
         try {
@@ -144,6 +145,25 @@ public class KeyStore_subSystem {
             e.printStackTrace();
         }
         return decryptedText;
+    }
+    public static EncryptHandler DecryptPassword2(byte [] text, Context context, byte[] iv)
+    {
+        SecretKey key = null;
+        try {
+            key = GetOrCreatePasswordKey(context);
+        } catch (CertificateException | IOException | UnrecoverableEntryException | NoSuchProviderException |
+                KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+        byte [] decryptedText = null;
+        try {
+            decryptedText = decrypt(text,key,iv);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
+                InvalidKeyException | BadPaddingException | IllegalBlockSizeException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        EncryptHandler handler = new EncryptHandler(iv,decryptedText,key);
+        return handler;
     }
     public static byte[] DecryptData(byte[] text,Context context, byte[] iv){
         SecretKey key = null;
