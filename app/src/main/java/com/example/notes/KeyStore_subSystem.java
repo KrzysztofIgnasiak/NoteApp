@@ -12,6 +12,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import android.content.Context;
@@ -216,6 +217,12 @@ public class KeyStore_subSystem {
             e.printStackTrace();
         }
         return decryptedText;
+    }
+    public static byte [] GenerateIv()
+    {
+        byte[] iv = new byte[12];
+        new SecureRandom().nextBytes(iv);
+        return iv;
     }
 
 }
