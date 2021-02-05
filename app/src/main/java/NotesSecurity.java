@@ -21,6 +21,18 @@ public class NotesSecurity {
         }
         return Notes;
     }
+    public static ArrayList<String>EncryptNotes(ArrayList<String> Notes, Context context, byte [] iv)
+    {
+        ArrayList<String> EncryptedNotes = new ArrayList<String>();
+        for (int i = 0;i<Notes.size();i++)
+        {
+            String CurrentNote = Notes.get(i);
+
+            String CurrentEncryptedNote = EncryptNote(CurrentNote,context,iv);
+            Notes.add(CurrentEncryptedNote);
+        }
+        return Notes;
+    }
 
     public static String DecryptNote(String EncryptedNote,Context context, byte [] iv)
     {

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>)sharedPreferences.getStringSet("notes",null); //getting notes
 
+
         //TODO create encryptedList
         //TODO decrypt
 
