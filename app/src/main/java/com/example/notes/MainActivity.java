@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             notes = new ArrayList(set);
+            byte [] iv = KeyStore_subSystem.GenerateIv();
+            ArrayList<String> EncryptedNotes = new ArrayList<String>();
+           // EncryptedNotes = com.example.notes.NotesSecurity.EncryptNotes()
         }
 
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
