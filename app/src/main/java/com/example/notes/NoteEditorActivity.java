@@ -7,9 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.widget.EditText;
 import android.content.Intent;
-
+import android.util.Log;
 import java.util.HashSet;
 
 import static android.media.CamcorderProfile.get;
@@ -47,15 +48,29 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                MainActivity.notes.set(noteId,String.valueOf(s)); //adding note
-                //TODO add encrypted version
+                MainActivity.notes1.set(noteId,String.valueOf(s)); //adding note
                 MainActivity.arrayAdapter.notifyDataSetChanged(); // displaying changes
+                SharedPreferences sharedPreferencesIv = getApplicationContext()
+                        .getSharedPreferences("com.example.iv", Context.MODE_PRIVATE);
 
-                SharedPreferences sharedPreferences = getApplicationContext()
-                        .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet<String> set = new HashSet(MainActivity.notes);
+                //encryption
+                //get iv
+                String ivString = sharedPreferencesIv.getString("iv",null);
+               byte[] iv = Base64.decode(ivString,Base64.NO_WRAP);
+               //get encrypted
+                String encrypted = NotesSecurity.EncryptNote(String.valueOf(s),getApplicationContext(),iv);
+                Log.d("Encryption on change or create",encrypted);
+
+                //add
+                MainActivity.EncryptedNotes.set(noteId,encrypted);
+                //MainActivity.EncryptedNotes.add(encrypted);
+
+                SharedPreferences sharedPreferencesEncrypted = getApplicationContext()
+                        .getSharedPreferences("com.example.EncryptedNotes", Context.MODE_PRIVATE);
+
+                HashSet<String> set = new HashSet(MainActivity.EncryptedNotes);
                 //initialise shared preferences where notes with be saved as hashSet
-                sharedPreferences.edit().putStringSet("notes",set).apply();
+                sharedPreferencesEncrypted.edit().putStringSet("EncryptedNotes",set).apply();
 
             }
 

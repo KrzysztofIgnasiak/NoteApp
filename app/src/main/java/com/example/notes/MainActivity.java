@@ -26,7 +26,8 @@ import java.util.HashSet;
 public class MainActivity extends AppCompatActivity {
 
    static ArrayList<String> notes = new ArrayList<>();
-    static ArrayList<String> notes1 = new ArrayList<>();
+   static ArrayList<String> notes1 = new ArrayList<>();
+    static ArrayList<String> EncryptedNotes = new ArrayList<>();
    static ArrayAdapter arrayAdapter;
 
    @Override
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>)sharedPreferences.getStringSet("notes",null); //getting notes
 
+
         byte[] iv = new  byte[0];
         SharedPreferences sharedPreferencesIv = getApplicationContext()
                 .getSharedPreferences("com.example.iv", Context.MODE_PRIVATE);
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO create encryptedList
         //TODO decrypt
+        //testing
 
         if(set == null) {
 
@@ -90,25 +93,49 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             notes = new ArrayList(set);
-            notes1 = new ArrayList(set);
+            //notes1 = new ArrayList(set);
 
 
-            for (int i = 0;i<notes1.size();i++)
-            {
+        }
+        //testing
+        SharedPreferences sharedPreferencesEncrypted = getApplicationContext()
+                .getSharedPreferences("com.example.EncryptedNotes", Context.MODE_PRIVATE);
+       // HashSet<String> setEncrypted = (HashSet<String>)sharedPreferences.getStringSet("EncryptedNotes",null); //getting notes
+       // setEncrypted = null;
 
-                String Note1 = notes1.get(i);
-                Log.d("before",Note1);
+           // for (int i = 0;i<notes.size();i++) {
+             //   String Note1 = notes.get(i);
+             //   Log.d("before", Note1);
 
-                Log.d("size", String.valueOf(notes1.size()));
-               // byte [] iv = KeyStore_subSystem.GenerateIv();
-                String encrypted = NotesSecurity.EncryptNote(Note1,getApplicationContext(),iv);
-                Log.d("after",encrypted);
-                String backed = NotesSecurity.DecryptNote(encrypted,getApplicationContext(),iv);
-                Log.d("backed",backed);
-            }
+               // Log.d("size", String.valueOf(notes.size()));
+                // byte [] iv = KeyStore_subSystem.GenerateIv();
+                //String encrypted = NotesSecurity.EncryptNote(Note1, getApplicationContext(), iv);
+                //Log.d("after", encrypted);
+                //EncryptedNotes.add(encrypted);
+                //String backed = NotesSecurity.DecryptNote(encrypted, getApplicationContext(), iv);
+                //Log.d("backed", backed);
+
+           // HashSet<String>   setEncrypted = new HashSet(MainActivity.EncryptedNotes);
+         //   sharedPreferencesEncrypted.edit().putStringSet("EncryptedNotes",setEncrypted).apply();
+
+        HashSet<String>  setEncrypted = (HashSet<String>)sharedPreferencesEncrypted.getStringSet("EncryptedNotes",null); //getting notes
+                if(setEncrypted != null)
+                {
+                    Log.d("sucess","Not empty");
+                }
+        EncryptedNotes = new ArrayList(setEncrypted);
+        for (int i = 0;i<EncryptedNotes.size();i++)
+        {
+            String encrypted = EncryptedNotes.get(i);
+            String backed = NotesSecurity.DecryptNote(encrypted, getApplicationContext(), iv);
+            Log.d("backed", backed);
+            notes1.add(backed);
         }
 
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
+
+
+
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes1);
 
         ListView.setAdapter(arrayAdapter);
 
@@ -131,15 +158,16 @@ public class MainActivity extends AppCompatActivity {
                        .setMessage("Do you want to delete this note").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
-                       notes.remove(position);
+                       notes1.remove(position);
+                       EncryptedNotes.remove(position);
                        //Todo encrypted notes remove
                        arrayAdapter.notifyDataSetChanged();
 
-                       SharedPreferences sharedPreferences = getApplicationContext()
-                               .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                       HashSet<String> set = new HashSet(MainActivity.notes);
+                       SharedPreferences sharedPreferencesEncrypted = getApplicationContext()
+                               .getSharedPreferences("com.example.EncryptedNotes", Context.MODE_PRIVATE);
+                       HashSet<String> set = new HashSet(MainActivity.EncryptedNotes);
 
-                       sharedPreferences.edit().putStringSet("notes",set).apply();
+                       sharedPreferencesEncrypted.edit().putStringSet("EncryptedNotes",set).apply();
                    }
                }).setNegativeButton("No",null)
                        .show();
