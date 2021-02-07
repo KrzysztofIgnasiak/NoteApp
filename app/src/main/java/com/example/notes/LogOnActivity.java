@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import android.content.SharedPreferences;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import java.util.Arrays;
 
 public class LogOnActivity extends AppCompatActivity {
 
@@ -109,6 +111,8 @@ public class LogOnActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),
                                 "there it is",Toast.LENGTH_SHORT).show();
                     }
+
+
 
                     // hashing try Password
                     Optional<String> tryHashPasswordOptional = Security.hashPassword(tryPassword,salt);//hash password received from user

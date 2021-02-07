@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.os.Bundle;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import java.util.HashSet;
 public class MainActivity extends AppCompatActivity {
 
    static ArrayList<String> notes = new ArrayList<>();
+    static ArrayList<String> notes1 = new ArrayList<>();
    static ArrayAdapter arrayAdapter;
 
    @Override
@@ -70,9 +72,22 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             notes = new ArrayList(set);
-            byte [] iv = KeyStore_subSystem.GenerateIv();
-            ArrayList<String> EncryptedNotes = new ArrayList<String>();
-           // EncryptedNotes = com.example.notes.NotesSecurity.EncryptNotes()
+            notes1 = new ArrayList(set);
+
+
+            for (int i = 0;i<notes1.size();i++)
+            {
+
+                String Note1 = notes1.get(i);
+                Log.d("before",Note1);
+
+                Log.d("size", String.valueOf(notes1.size()));
+                byte [] iv = KeyStore_subSystem.GenerateIv();
+                String encrypted = NotesSecurity.EncryptNote(Note1,getApplicationContext(),iv);
+                Log.d("after",encrypted);
+                String backed = NotesSecurity.DecryptNote(encrypted,getApplicationContext(),iv);
+                Log.d("backed",backed);
+            }
         }
 
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
@@ -99,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
                        notes.remove(position);
+                       //Todo encrypted notes remove
                        arrayAdapter.notifyDataSetChanged();
 
                        SharedPreferences sharedPreferences = getApplicationContext()

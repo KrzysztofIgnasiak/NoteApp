@@ -48,6 +48,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 MainActivity.notes.set(noteId,String.valueOf(s)); //adding note
+                //TODO add encrypted version
                 MainActivity.arrayAdapter.notifyDataSetChanged(); // displaying changes
 
                 SharedPreferences sharedPreferences = getApplicationContext()

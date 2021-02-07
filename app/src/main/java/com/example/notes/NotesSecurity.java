@@ -8,6 +8,7 @@ import com.example.notes.KeyStore_subSystem;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class NotesSecurity {
 
@@ -43,11 +44,8 @@ public class NotesSecurity {
         byte [] CurrentNoteBytes = KeyStore_subSystem.DecryptData(CurrentEncryptedNoteBytes,context,iv);// decrypt
 
         String Note = null;
-        try {
-            Note = new String(CurrentNoteBytes,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        // Note = new String(CurrentNoteBytes,"UTF-8");
+        Note = ConvertToString(CurrentNoteBytes);
         return Note;
     }
     public static String EncryptNote(String Note, Context context, byte[] iv)
@@ -62,6 +60,7 @@ public class NotesSecurity {
         EncryptHandler Handler = KeyStore_subSystem.EncryptData2(context,NoteBytes,iv);
         byte [] NoteEncryptedBytes = Handler.getEncrypted();
         String NoteEncrypted =  Base64.encodeToString(NoteEncryptedBytes, Base64.NO_WRAP);
+       // String NoteEncrypted = ConvertToString(NoteEncryptedBytes);
         return NoteEncrypted;
 
     }
@@ -73,5 +72,23 @@ public class NotesSecurity {
 
         return EncryptedNotes;
     }
+    public static String ConvertToString(byte[] chars)
+    {
+        StringBuilder result = new StringBuilder();
+        String temp = "";
+        for(int i =0;i<chars.length;i++)
+        {
+            byte[] tempbyte = Arrays.copyOfRange(chars,i,i+1);
+            try {
+                temp = new String(tempbyte,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            result.append(temp);
+        }
+        return result.toString();
+
+    }
+
 
 }
