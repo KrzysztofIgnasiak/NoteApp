@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,6 +63,22 @@ public class MainActivity extends AppCompatActivity {
                 .getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>)sharedPreferences.getStringSet("notes",null); //getting notes
 
+        byte[] iv = new  byte[0];
+        SharedPreferences sharedPreferencesIv = getApplicationContext()
+                .getSharedPreferences("com.example.iv", Context.MODE_PRIVATE);
+        String ivString = sharedPreferencesIv.getString("iv",null);
+
+        if(ivString == null) // if iv not exist
+        {
+            iv = KeyStore_subSystem.GenerateIv(); // create iv
+            ivString  =  Base64.encodeToString(iv, Base64.NO_WRAP);
+            sharedPreferencesIv.edit().putString("iv", ivString).apply();
+        }
+        else
+        {
+            Log.d("sucess","iv form Preferences");
+            iv = Base64.decode(ivString,Base64.NO_WRAP);
+        }
 
         //TODO create encryptedList
         //TODO decrypt
@@ -82,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("before",Note1);
 
                 Log.d("size", String.valueOf(notes1.size()));
-                byte [] iv = KeyStore_subSystem.GenerateIv();
+               // byte [] iv = KeyStore_subSystem.GenerateIv();
                 String encrypted = NotesSecurity.EncryptNote(Note1,getApplicationContext(),iv);
                 Log.d("after",encrypted);
                 String backed = NotesSecurity.DecryptNote(encrypted,getApplicationContext(),iv);
