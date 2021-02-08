@@ -5,12 +5,10 @@ import javax.crypto.SecretKey;
 public class EncryptHandler {
     private byte[] iv;
     private byte[] encrypted;
-    private SecretKey key;
 
-    public EncryptHandler(byte[] iv_, byte[] encrypted_, SecretKey key_) {
+    public EncryptHandler(byte[] iv_, byte[] encrypted_) {
         this.iv = iv_;
         this.encrypted = encrypted_;
-        this.key = key_;
     }
 
     public byte[] getIv() {
@@ -21,8 +19,4 @@ public class EncryptHandler {
         return encrypted;
     }
 
-    public String getKey()
-    {
-        return key.toString();
-    }
 }

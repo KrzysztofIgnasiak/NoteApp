@@ -60,7 +60,7 @@ public class keyStoreSubSystem {
         byte[] iv = cipher.getIV(); // initialization vector
 
         byte[] encryption = cipher.doFinal(textToEncrypt); //encrypt
-        EncryptHandler handler = new EncryptHandler(iv,encryption,key);
+        EncryptHandler handler = new EncryptHandler(iv,encryption);
 
         return handler;
     }
@@ -72,7 +72,7 @@ public class keyStoreSubSystem {
         cipher.init(Cipher.ENCRYPT_MODE,key,spec);
         byte[] encryption = cipher.doFinal(textToEncrypt); //encrypt
 
-        EncryptHandler handler = new EncryptHandler(iv,encryption,key);
+        EncryptHandler handler = new EncryptHandler(iv,encryption);
 
         return handler;
 
