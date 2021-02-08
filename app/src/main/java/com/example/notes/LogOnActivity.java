@@ -149,33 +149,12 @@ public class LogOnActivity extends AppCompatActivity {
             }
 
         });
-
+        //it was here
         btFinger = findViewById(R.id.login_btn);
 
         BiometricManager biometricManager;
         biometricManager = BiometricManager.from(this);
 
-        switch(biometricManager.canAuthenticate()) //checking if it is possible to use sensors
-        {
-            case BiometricManager.BIOMETRIC_SUCCESS:
-               // Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-              //  startActivity(intent);
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-                Toast.makeText(getApplicationContext(),
-                        "the device don't have a fingerprint sensor",Toast.LENGTH_SHORT).show();
-                btFinger.setVisibility(View.GONE);
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-                Toast.makeText(getApplicationContext(),
-                        "the biometric sensors in currently unavailable",Toast.LENGTH_SHORT).show();
-                btFinger.setVisibility(View.GONE);
-                break;
-             case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-                 Toast.makeText(getApplicationContext(),
-                         "your device don't have any fingerprint saved",Toast.LENGTH_SHORT).show();
-                 break;
-        }
 
         Executor executor = ContextCompat.getMainExecutor(this); // an object that executes submitted runnable tasks.
 
@@ -208,7 +187,29 @@ public class LogOnActivity extends AppCompatActivity {
         btFinger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                biometricPrompt.authenticate(promptInfo);
+                switch(biometricManager.canAuthenticate()) //checking if it is possible to use sensors
+                {
+                    case BiometricManager.BIOMETRIC_SUCCESS:
+                        biometricPrompt.authenticate(promptInfo);
+                        // Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                        //  startActivity(intent);
+                        break;
+                    case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                        Toast.makeText(getApplicationContext(),
+                                "the device don't have a fingerprint sensor",Toast.LENGTH_SHORT).show();
+                        btFinger.setVisibility(View.GONE);
+                        break;
+                    case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                        Toast.makeText(getApplicationContext(),
+                                "the biometric sensors in currently unavailable",Toast.LENGTH_SHORT).show();
+                        btFinger.setVisibility(View.GONE);
+                        break;
+                    case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                        Toast.makeText(getApplicationContext(),
+                                "your device don't have any fingerprint saved",Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                //biometricPrompt.authenticate(promptInfo);
             }
         });
     }
