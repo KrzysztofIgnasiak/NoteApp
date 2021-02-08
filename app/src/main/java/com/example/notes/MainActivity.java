@@ -100,38 +100,33 @@ public class MainActivity extends AppCompatActivity {
         //testing
         SharedPreferences sharedPreferencesEncrypted = getApplicationContext()
                 .getSharedPreferences("com.example.EncryptedNotes", Context.MODE_PRIVATE);
-       // HashSet<String> setEncrypted = (HashSet<String>)sharedPreferences.getStringSet("EncryptedNotes",null); //getting notes
-       // setEncrypted = null;
 
-           // for (int i = 0;i<notes.size();i++) {
-             //   String Note1 = notes.get(i);
-             //   Log.d("before", Note1);
-
-               // Log.d("size", String.valueOf(notes.size()));
-                // byte [] iv = KeyStore_subSystem.GenerateIv();
-                //String encrypted = NotesSecurity.EncryptNote(Note1, getApplicationContext(), iv);
-                //Log.d("after", encrypted);
-                //EncryptedNotes.add(encrypted);
-                //String backed = NotesSecurity.DecryptNote(encrypted, getApplicationContext(), iv);
-                //Log.d("backed", backed);
-
-           // HashSet<String>   setEncrypted = new HashSet(MainActivity.EncryptedNotes);
-         //   sharedPreferencesEncrypted.edit().putStringSet("EncryptedNotes",setEncrypted).apply();
 
         HashSet<String>  setEncrypted = (HashSet<String>)sharedPreferencesEncrypted.getStringSet("EncryptedNotes",null); //getting notes
+        EncryptedNotes = new ArrayList(setEncrypted);
                 if(setEncrypted != null)
                 {
                     Log.d("sucess","Not empty");
                 }
+                if(setEncrypted == null)
+                {
+                    String example = "Example Note";
+                    String encrypted = NotesSecurity.EncryptNote(example,getApplicationContext(),iv);
+                    EncryptedNotes.add(encrypted);
+                }
               //  notes1 = new ArrayList<String>();
-        EncryptedNotes = new ArrayList(setEncrypted);
+       // EncryptedNotes = new ArrayList(setEncrypted);
+        ArrayList<String> temp = new ArrayList<String>();
         for (int i = 0;i<EncryptedNotes.size();i++)
         {
+            //ArrayList<String> temp = new ArrayList<String>();
             String encrypted = EncryptedNotes.get(i);
             String backed = NotesSecurity.DecryptNote(encrypted, getApplicationContext(), iv);
             Log.d("backed", backed);
-            notes1.add(backed);
+           // notes1.add(backed);
+            temp.add(backed);
         }
+        notes1 = temp;
 
 
 
