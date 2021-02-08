@@ -1,15 +1,14 @@
 package com.example.notes;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
@@ -71,9 +70,9 @@ public class CreateLogActivity extends AppCompatActivity {
                 {
                     e.printStackTrace();
                 }
-                EncryptHandler HandlerPassword = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newPasswordBytes); //encrypt
-                byte [] newPasswordEncryptedBytes = HandlerPassword.getEncrypted();
-                byte [] newPasswordIv = HandlerPassword.getIv();
+                EncryptHandler handlerPassword = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newPasswordBytes); //encrypt
+                byte [] newPasswordEncryptedBytes = handlerPassword.getEncrypted();
+                byte [] newPasswordIv = handlerPassword.getIv();
 
                 String newPasswordEncrypted = Base64.encodeToString(newPasswordEncryptedBytes, Base64.NO_WRAP); // to string
                 String newPasswordIvString =  Base64.encodeToString(newPasswordIv, Base64.NO_WRAP); //encode iv as string
