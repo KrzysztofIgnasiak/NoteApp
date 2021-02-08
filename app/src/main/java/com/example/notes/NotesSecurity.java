@@ -3,26 +3,22 @@ package com.example.notes;
 import android.content.Context;
 import android.util.Base64;
 
-import com.example.notes.EncryptHandler;
-import com.example.notes.KeyStore_subSystem;
-
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class NotesSecurity {
 
-    public static String DecryptNote(String encryptedNote,Context context, byte [] iv)
+    public static String decryptNote(String encryptedNote, Context context, byte [] iv)
     {
         byte [] currentEncryptedNoteBytes = new byte[0]; // get bytes
         currentEncryptedNoteBytes = Base64.decode(encryptedNote,Base64.NO_WRAP); // to bytes
         byte [] currentNoteBytes = KeyStore_subSystem.DecryptData(currentEncryptedNoteBytes,context,iv);// decrypt
 
         String note = null;
-        note = ConvertToString(currentNoteBytes); // back to string
+        note = convertToString(currentNoteBytes); // back to string
         return note;
     }
-    public static String EncryptNote(String note, Context context, byte[] iv)
+    public static String encryptNote(String note, Context context, byte[] iv)
     {
         byte [] noteBytes = new byte[0];
         try {
@@ -39,7 +35,7 @@ public class NotesSecurity {
 
     }
 
-    public static String ConvertToString(byte[] chars)
+    public static String convertToString(byte[] chars)
     {
         StringBuilder result = new StringBuilder();
         String temp = "";

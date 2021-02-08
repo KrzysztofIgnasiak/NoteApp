@@ -14,7 +14,6 @@ import android.util.Log;
 import java.util.HashSet;
 
 import static android.media.CamcorderProfile.get;
-import static android.widget.EditText.*;
 
 public class NoteEditorActivity extends AppCompatActivity {
     int noteId;
@@ -65,7 +64,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 String ivString = sharedPreferencesIv.getString("iv",null);
                 byte[] iv = Base64.decode(ivString,Base64.NO_WRAP);
                 //get encrypted
-                String encrypted = NotesSecurity.EncryptNote(String.valueOf(s),getApplicationContext(),iv);
+                String encrypted = NotesSecurity.encryptNote(String.valueOf(s),getApplicationContext(),iv);
                 Log.d("Encryption on change or create",encrypted);
 
                 //add

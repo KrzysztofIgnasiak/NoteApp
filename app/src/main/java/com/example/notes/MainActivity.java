@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 if(setEncrypted == null)
                 {
                     String example = "Example Note";
-                    String encrypted = NotesSecurity.EncryptNote(example,getApplicationContext(),iv);
+                    String encrypted = NotesSecurity.encryptNote(example,getApplicationContext(),iv);
                     EncryptedNotes.add(encrypted);
                 }
                 else
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         {
             //ArrayList<String> temp = new ArrayList<String>();
             String encrypted = EncryptedNotes.get(i);
-            String backed = NotesSecurity.DecryptNote(encrypted, getApplicationContext(), iv);
+            String backed = NotesSecurity.decryptNote(encrypted, getApplicationContext(), iv);
             Log.d("backed", backed);
            // notes1.add(backed);
             temp.add(backed);
