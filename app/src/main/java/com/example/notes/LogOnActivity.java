@@ -61,8 +61,8 @@ public class LogOnActivity extends AppCompatActivity {
                     String passwordEncrypted = pref.getString("Password",null); //get stored password
                     String salt = pref.getString("salt",null); // get stored string
                     String userNameEncrypted = pref.getString("LogIn",null); // get stored username
-                    String userIv = pref.getString("userIv",null);
-                    String passwordIv = pref.getString("passwordIv",null);
+                    String userIv = pref.getString("UserIv",null);
+                    String passwordIv = pref.getString("PasswordIv",null);
 
 
                     String tryPassword = etPassword.getText().toString(); // get password from user

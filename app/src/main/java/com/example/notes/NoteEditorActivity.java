@@ -28,13 +28,13 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         if(noteId !=-1) //if there is no note
         {
-            editText.setText(MainActivity.notes1.get(noteId));
+            editText.setText(MainActivity.notes.get(noteId));
         }
         else
         {
-            MainActivity.notes1.add("");
+            MainActivity.notes.add("");
             MainActivity.EncryptedNotes.add("");
-            noteId = MainActivity.notes1.size() -1; //set id
+            noteId = MainActivity.notes.size() -1; //set id
             MainActivity.arrayAdapter.notifyDataSetChanged(); //change text
         }
 
@@ -47,7 +47,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                MainActivity.notes1.set(noteId,String.valueOf(s)); //adding note
+                MainActivity.notes.set(noteId,String.valueOf(s)); //adding note
                 MainActivity.arrayAdapter.notifyDataSetChanged(); // displaying changes
 
             }
