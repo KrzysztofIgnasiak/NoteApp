@@ -54,7 +54,7 @@ public class CreateLogActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                EncryptHandler HandlerUser = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newUserBytes); //encrypt
+                EncryptHandler HandlerUser = keyStoreSubSystem.encryptPassword(getApplicationContext(),newUserBytes); //encrypt
                 byte [] newUserEncryptedBytes = HandlerUser.getEncrypted();
                 byte [] newUserIv = HandlerUser.getIv();
 
@@ -70,7 +70,7 @@ public class CreateLogActivity extends AppCompatActivity {
                 {
                     e.printStackTrace();
                 }
-                EncryptHandler handlerPassword = KeyStore_subSystem.EncryptPassword(getApplicationContext(),newPasswordBytes); //encrypt
+                EncryptHandler handlerPassword = keyStoreSubSystem.encryptPassword(getApplicationContext(),newPasswordBytes); //encrypt
                 byte [] newPasswordEncryptedBytes = handlerPassword.getEncrypted();
                 byte [] newPasswordIv = handlerPassword.getIv();
 

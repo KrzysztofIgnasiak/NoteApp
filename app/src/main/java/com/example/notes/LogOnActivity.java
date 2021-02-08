@@ -1,7 +1,6 @@
 package com.example.notes;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -13,7 +12,6 @@ import androidx.core.content.ContextCompat;
 
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import java.util.Arrays;
 
 public class LogOnActivity extends AppCompatActivity {
 
@@ -87,8 +84,8 @@ public class LogOnActivity extends AppCompatActivity {
                     byte [] PasswordEncryptedBytes = Base64.decode(PasswordEncrypted,Base64.NO_WRAP);
 
                     //decrypt
-                    byte [] UserBytes = KeyStore_subSystem.DecryptPassword(UserNameEncryptedBytes,getApplicationContext(),UserIvBytes);
-                    byte [] hashOryginalPasswordBytes = KeyStore_subSystem.DecryptPassword(PasswordEncryptedBytes,getApplicationContext(),PasswordIvBytes);
+                    byte [] UserBytes = keyStoreSubSystem.decryptPassword(UserNameEncryptedBytes,getApplicationContext(),UserIvBytes);
+                    byte [] hashOryginalPasswordBytes = keyStoreSubSystem.decryptPassword(PasswordEncryptedBytes,getApplicationContext(),PasswordIvBytes);
 
                     //back to string
                     String UserName = null;

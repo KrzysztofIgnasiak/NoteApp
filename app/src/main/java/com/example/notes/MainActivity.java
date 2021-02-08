@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(ivString == null) // if iv not exist
         {
-            iv = KeyStore_subSystem.GenerateIv(); // create iv
+            iv = keyStoreSubSystem.generateIv(); // create iv
             ivString  =  Base64.encodeToString(iv, Base64.NO_WRAP);
             sharedPreferencesIv.edit().putString("iv", ivString).apply();
         }

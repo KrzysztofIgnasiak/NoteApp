@@ -12,7 +12,7 @@ public class NotesSecurity {
     {
         byte [] currentEncryptedNoteBytes = new byte[0]; // get bytes
         currentEncryptedNoteBytes = Base64.decode(encryptedNote,Base64.NO_WRAP); // to bytes
-        byte [] currentNoteBytes = KeyStore_subSystem.DecryptData(currentEncryptedNoteBytes,context,iv);// decrypt
+        byte [] currentNoteBytes = keyStoreSubSystem.decryptData(currentEncryptedNoteBytes,context,iv);// decrypt
 
         String note = null;
         note = convertToString(currentNoteBytes); // back to string
@@ -27,7 +27,7 @@ public class NotesSecurity {
 
             e.printStackTrace();
         }
-        EncryptHandler handler = KeyStore_subSystem.EncryptData2(context,noteBytes,iv); //encrypt
+        EncryptHandler handler = keyStoreSubSystem.encryptData(context,noteBytes,iv); //encrypt
         byte [] noteEncryptedBytes = handler.getEncrypted(); //get encrypted bytes
 
         String noteEncrypted =  Base64.encodeToString(noteEncryptedBytes, Base64.NO_WRAP); //convert to string
