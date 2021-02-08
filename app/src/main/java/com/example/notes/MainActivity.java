@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         HashSet<String>  setEncrypted = (HashSet<String>)sharedPreferencesEncrypted.getStringSet("EncryptedNotes",null); //getting notes
-        EncryptedNotes = new ArrayList(setEncrypted);
+        //EncryptedNotes = new ArrayList(setEncrypted);
                 if(setEncrypted != null)
                 {
                     Log.d("sucess","Not empty");
@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
                     String example = "Example Note";
                     String encrypted = NotesSecurity.EncryptNote(example,getApplicationContext(),iv);
                     EncryptedNotes.add(encrypted);
+                }
+                else
+                {
+                    EncryptedNotes = new ArrayList(setEncrypted);
                 }
               //  notes1 = new ArrayList<String>();
        // EncryptedNotes = new ArrayList(setEncrypted);
