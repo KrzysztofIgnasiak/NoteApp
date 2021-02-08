@@ -28,7 +28,7 @@ public class LogOnActivity extends AppCompatActivity {
     Button btSubmit;
     Button btFinger;
     Button btCreate;
-    private final int maxAttemps = 4;
+    private final int maxAttempts = 4;
     private int attempt = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class LogOnActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),CreateLogActivity.class);
-                startActivity(intent); //go to CreateLogActtivity
+                startActivity(intent); //go to CreateLogActivity
             }
         });
 
@@ -53,47 +53,43 @@ public class LogOnActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(attempt <maxAttemps)
+                if(attempt <maxAttempts)
                 {
                     SharedPreferences pref = getSharedPreferences("com.example.notes.utilities",
                             Context.MODE_PRIVATE); //initialise shared preferences, where login, password
                     // and salt is stored
 
-                    String PasswordEncrypted = pref.getString("Password",null); //get stored password
+                    String passwordEncrypted = pref.getString("Password",null); //get stored password
                     String salt = pref.getString("salt",null); // get stored string
-                    String UserNameEncrypted = pref.getString("LogIn",null); // get stored username
-                    String UserIv = pref.getString("UserIv",null);
-                    String PasswordIv = pref.getString("PasswordIv",null);
+                    String userNameEncrypted = pref.getString("LogIn",null); // get stored username
+                    String userIv = pref.getString("userIv",null);
+                    String passwordIv = pref.getString("passwordIv",null);
 
 
-                    // Optional<String> saltOptional = Security.generateSalt(512);
-                    //String salt = saltOptional.orElse("");
-                    // String oryginalPassword = "admin";
                     String tryPassword = etPassword.getText().toString(); // get password from user
-                    // Optional<String> hashOryginalPassword = Security.hashPassword(oryginalPassword,salt);
-                    if(UserNameEncrypted.isEmpty() ||salt.isEmpty())
+
+                    if(userNameEncrypted.isEmpty() ||salt.isEmpty())
                     {
                         Toast.makeText(getApplicationContext(),
                                 "you have to create username and password",Toast.LENGTH_SHORT).show();
                     }
                     //decrypt with keystore
                     //everything to bytes
-                    byte [] UserIvBytes = Base64.decode(UserIv,Base64.NO_WRAP);
-                    byte [] PasswordIvBytes = Base64.decode(PasswordIv,Base64.NO_WRAP);
-                    byte [] UserNameEncryptedBytes = Base64.decode(UserNameEncrypted,Base64.NO_WRAP);
-                    byte [] PasswordEncryptedBytes = Base64.decode(PasswordEncrypted,Base64.NO_WRAP);
+                    byte [] userIvBytes = Base64.decode(userIv,Base64.NO_WRAP);
+                    byte [] passwordIvBytes = Base64.decode(passwordIv,Base64.NO_WRAP);
+                    byte [] userNameEncryptedBytes = Base64.decode(userNameEncrypted,Base64.NO_WRAP);
+                    byte [] passwordEncryptedBytes = Base64.decode(passwordEncrypted,Base64.NO_WRAP);
 
                     //decrypt
-                    byte [] UserBytes = keyStoreSubSystem.decryptPassword(UserNameEncryptedBytes,getApplicationContext(),UserIvBytes);
-                    byte [] hashOryginalPasswordBytes = keyStoreSubSystem.decryptPassword(PasswordEncryptedBytes,getApplicationContext(),PasswordIvBytes);
+                    byte [] userBytes = keyStoreSubSystem.decryptPassword(userNameEncryptedBytes,getApplicationContext(),userIvBytes);
+                    byte [] hashOryginalPasswordBytes = keyStoreSubSystem.decryptPassword(passwordEncryptedBytes,getApplicationContext(),passwordIvBytes);
 
                     //back to string
-                    String UserName = null;
+                    String userName = null;
                     String hashOryginalPassword = null;
                     try {
-                        UserName = new String(UserBytes, "UTF-8");
-                       // Toast.makeText(getApplicationContext(),
-                       //         UserName,Toast.LENGTH_SHORT).show();
+                        userName = new String(userBytes, "UTF-8");
+
                     } catch ( UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -103,31 +99,19 @@ public class LogOnActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    if(hashOryginalPassword == null)
-                    {
-                        Toast.makeText(getApplicationContext(),
-                                "there it is",Toast.LENGTH_SHORT).show();
-                    }
-
-
-
                     // hashing try Password
                     Optional<String> tryHashPasswordOptional = Security.hashPassword(tryPassword,salt);//hash password received from user
 
                     String tryHashPassword = tryHashPasswordOptional.orElse("");
-                    //Toast.makeText(getApplicationContext(),
-                      //      tryHashPassword,Toast.LENGTH_SHORT).show();
+
                     //compare
-                    if(etUsername.getText().toString().equals(UserName) &&
+                    if(etUsername.getText().toString().equals(userName) &&
                             hashOryginalPassword.equals(tryHashPassword)) // check whether username and password are correct
-                        //was tryHashPassword
                     {
                         etUsername.setText("");
                         etPassword.setText("");
                         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(intent); // go to MainActivity
-                        // AlertDialog.Builder builder = new AlertDialog.Builder(LogOnActivity.this);
-
                     }
                     else
                     {
@@ -142,11 +126,10 @@ public class LogOnActivity extends AppCompatActivity {
                 {
                     System.exit(0);
                 }
-               //attempt ++;
             }
 
         });
-        //it was here
+
         btFinger = findViewById(R.id.login_btn);
 
         BiometricManager biometricManager;
@@ -206,7 +189,6 @@ public class LogOnActivity extends AppCompatActivity {
                                 "your device don't have any fingerprint saved",Toast.LENGTH_SHORT).show();
                         break;
                 }
-                //biometricPrompt.authenticate(promptInfo);
             }
         });
     }
