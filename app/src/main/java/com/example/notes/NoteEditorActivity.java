@@ -35,6 +35,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         else
         {
             MainActivity.notes1.add("");
+            MainActivity.EncryptedNotes.add("");
             noteId = MainActivity.notes1.size() -1; //set id
             MainActivity.arrayAdapter.notifyDataSetChanged(); //change text
         }
