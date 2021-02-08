@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Log.d("sucess","Not empty");
                 }
+              //  notes1 = new ArrayList<String>();
         EncryptedNotes = new ArrayList(setEncrypted);
         for (int i = 0;i<EncryptedNotes.size();i++)
         {
