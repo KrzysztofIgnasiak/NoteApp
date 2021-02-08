@@ -1,19 +1,18 @@
 package com.example.notes;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.widget.EditText;
-import android.content.Intent;
 import android.util.Log;
-import java.util.HashSet;
+import android.widget.EditText;
 
-import static android.media.CamcorderProfile.get;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.HashSet;
 
 public class NoteEditorActivity extends AppCompatActivity {
     int noteId;
@@ -56,6 +55,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
+                //initialise iv
                 SharedPreferences sharedPreferencesIv = getApplicationContext()
                         .getSharedPreferences("com.example.iv", Context.MODE_PRIVATE);
 
@@ -65,11 +65,9 @@ public class NoteEditorActivity extends AppCompatActivity {
                 byte[] iv = Base64.decode(ivString,Base64.NO_WRAP);
                 //get encrypted
                 String encrypted = NotesSecurity.encryptNote(String.valueOf(s),getApplicationContext(),iv);
-                Log.d("Encryption on change or create",encrypted);
 
                 //add
                 MainActivity.EncryptedNotes.set(noteId,encrypted);
-                //MainActivity.EncryptedNotes.add(encrypted);
 
                 SharedPreferences sharedPreferencesEncrypted = getApplicationContext()
                         .getSharedPreferences("com.example.EncryptedNotes", Context.MODE_PRIVATE);
